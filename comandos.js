@@ -11,17 +11,27 @@ const e9 = document.querySelector('#i9')
 const turno = document.querySelector("#vez")
 const infos = document.querySelector('footer')
 
-let jogadas = 0
+var jogadas = 0
+var turnoFinalizado = false
 const espacos = [e1, e1, e2, e3, e4, e5, e6, e7, e8, e9]
 let preenchidos = {i1:'', i2:'', i3:'', i4:'', i5:'', i6:'', i7:'', i8:'', i9:''}
 
 
+const diretorioX = 'img/Red_X.svg.png'
+const urlX = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/2048px-Red_X.svg.png'
+
+const diretorioCirculo = 'img/circulo-azul-diabetes.webp'
+const urlCirculo = 'https://i0.wp.com/drasuzanavieira.med.br/wp-content/uploads/2019/11/circulo-azul-diabetes.png?fit=300%2C300&ssl=1'
+
+const diretorioFundoOff = 'http://127.0.0.1:5500/img/fundo.webp'
+const urlFundoOff = 'https://espacointegra.blog.br/wp-content/uploads/2017/07/Fundo-transparente-1900x1900.png'
 
 espacos.forEach(espaco => {
     espaco.onclick = function (event) {
-        if (espaco.src == 'http://127.0.0.1:5500/img/fundo.webp') {
+        if(turnoFinalizado) return
+        if (espaco.src == urlFundoOff) {
             if (jogadas % 2 == 0) {
-                event.target.src = 'img/Red_X.svg.png'
+                event.target.src = urlX
                 jogadas++
                 turno.innerHTML = 'Vez de <o>O</o>'
                 anotar(espaco.id, 'x')
@@ -30,7 +40,7 @@ espacos.forEach(espaco => {
                     ganhouX()
                 }
             } else {
-                event.target.src = 'img/circulo-azul-diabetes.webp'
+                event.target.src = urlCirculo
                 espaco.style.width = '117px'
                 espaco.style.height = '117px'
                 jogadas++
@@ -95,6 +105,7 @@ function velha () {
     contVelhas++
     velhas.innerHTML = contVelhas
     infos.append(botaoReset)
+    turnoFinalizado = true
 }    
 
 function ganhouX () {
@@ -102,6 +113,7 @@ function ganhouX () {
     contX++
     pontosX.innerText = contX
     infos.append(botaoReset)
+    turnoFinalizado = true
 }
 
 function ganhouO () {
@@ -109,14 +121,17 @@ function ganhouO () {
     contO++
     pontosO.innerText = contO
     infos.append(botaoReset)
+    turnoFinalizado = true
 }
 botaoReset.onclick = function () {
     preenchidos = {i1:'', i2:'', i3:'', i4:'', i5:'', i6:'', i7:'', i8:'', i9:''}
     espacos.forEach(espaco => {
-        espaco.src = 'img/fundo.webp'
+        espaco.src = urlFundoOff
     })
     turno.innerHTML = 'Vez de <x>X</x>'
     botaoReset.remove()
+    jogadas = 0
+    turnoFinalizado = false
     window.botaoReset = document.createElement('input')
 }
 
